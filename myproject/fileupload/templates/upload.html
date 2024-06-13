@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload CSV File</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5; 
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh; 
+            background-color: #3ABEF9; 
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            background-color: #A7E6FF;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        .visualization {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .visualization img {
+            max-width: 100%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+        .visualization h3 {
+            margin-top: 20px;
+        }
+        .table-container {
+            width: 100%;
+            max-width: 800px; 
+            margin: 0 auto; 
+            background-color: #ffffff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .data_preview{
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .table-container h2 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Upload CSV File</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Upload</button>
+        </form>
+
+        {% if data_preview %}
+        <div class="data_preview">
+            <h2>Data Preview</h2>
+            <div>{{ data_preview|safe }}</div>
+        </div>
+
+        <div class="table-container">
+            <h2>Data Size</h2>
+            <p>Rows: {{ data_size.0 }}, Columns: {{ data_size.1 }}</p>
+        </div>
+
+        <div class="table-container">
+            <h2>Dropped Columns with NULL values</h2>
+            <div>{{ dropped_columns|safe }}</div>
+        </div>
+
+        <div class="table-container">
+            <h2>Columns</h2>
+            <div>{{ columns|safe }}</div>
+        </div>
+
+        <div class="table-container">
+            <h2>Missing Values</h2>
+            <div>{{ missing_values|safe }}</div>
+        </div>
+
+        <div class="table-container">
+            <h2>Summary Statistics</h2>
+            <div>{{ summary_statistics|safe }}</div>
+        </div>
+
+        <div class="table-container">
+            <h2>Mean Values</h2>
+            <div>{{ mean_values|safe }}</div>
+        </div>
+
+        <div class="table-container">
+            <h2>Median Values</h2>
+            <div>{{ median_values|safe }}</div>
+        </div>
+
+        <div class="table-container">
+            <h2>Standard Deviation</h2>
+            <div>{{ std_values|safe }}</div>
+        </div>
+        {% endif %}
+
+        <div class="visualization">
+            {% if visualizations %}
+            <h2>Visualizations</h2>
+            {% endif %}
+            {% for viz in visualizations %}
+                <div class="visualization">
+                    <h3>{{ viz.title }}</h3>
+                    <img src="data:image/png;base64,{{ viz.image }}" alt="{{ viz.title }}">
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
